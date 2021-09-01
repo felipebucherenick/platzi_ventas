@@ -1,4 +1,4 @@
-clients = 'rick,morty,felipe,oscar,natalia'
+clients = ['rick', 'morty', 'felipe', 'oscar', 'natalia']
 
 
 def print_welcome():
@@ -15,20 +15,21 @@ def print_welcome():
 def create_client(client_name):
     global clients
     if client_name not in clients:
-        _add_coma()
-        clients += client_name
+        clients.append(client_name)
     else:
         print('The client aldready exist')
 
 
 def list_clients():
-    print(clients)
+    for id, client in enumerate(clients):
+        print(f'{id}: {client}')
 
 
 def update_client(client_name, updated_client_name):
     global clients
     if client_name in clients:
-        clients = clients.replace(client_name, updated_client_name)
+        index = clients.index(client_name)
+        clients[index] = updated_client_name
     else:
         print('The client doesn\'t exist')
 
@@ -36,24 +37,18 @@ def update_client(client_name, updated_client_name):
 def delete_client(client_name):
     global clients
     if client_name in clients:
-        clients = clients.replace(client_name + ',', '')
+        clients.remove(client_name)
     else:
         print('The client doesn\'t exist')
 
 
 def search_name(client_name):
     global clients
-    clients_list = clients.split(',')
-    for client in clients_list:
+    for client in clients:
         if client != client_name:
             continue
         else:
             return True
-
-
-def _add_coma():
-    global clients
-    clients += ','
 
 
 def _get_client_name():
@@ -62,7 +57,7 @@ def _get_client_name():
 
 def run():
     print_welcome()
-    list_clients()
+    print(clients)
     command = input()
     command = command.upper()
     if command == 'C':
