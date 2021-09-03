@@ -51,10 +51,10 @@ def update_client(client_name):
         if client['name'] == client_name:
             index = clients.index(client)
             clients[index] = {
-                'name': _get_client_field('name'),
-                'company': _get_client_field('company'),
-                'email': _get_client_field('email'),
-                'position': _get_client_field('position')
+                'name': _get_client_field('name', 'new '),
+                'company': _get_client_field('company', 'new '),
+                'email': _get_client_field('email', 'new '),
+                'position': _get_client_field('position', 'new ')
             }
 
 
@@ -76,10 +76,10 @@ def search_name(client_name):
             return True
 
 
-def _get_client_field(field_name):
+def _get_client_field(field_name, new=''):
     field = None
     while not field:
-        field = input(f'Client {field_name}: ')
+        field = input(f'Client {new}{field_name}: ')
     return field
 
 
