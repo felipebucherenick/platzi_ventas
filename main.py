@@ -1,17 +1,25 @@
-clients = [
-    {
-        'name': 'felipe',
-        'company': 'google',
-        'email': 'felipe@gmail.com',
-        'position': 'software engeneer'
-    },
-    {
-        'name': 'Marcos',
-        'company': 'netflix',
-        'email': 'marcos@gmail.com',
-        'position': 'designer'
-    }
-]
+import csv
+import os
+
+CLIENTS_TABLE = '.clients.csv'
+CLIENTS_SCHEMA = ['name', 'company', 'email', 'position']
+clients = []
+
+
+def _initialize_clients_from_storage():
+    with open(CLIENTS_TABLE, mode='r') as f:
+        reader = csv.DictReader(f, fieldnames=CLIENTS_SCHEMA)
+        for row in reader:
+            clients.append(row)
+
+
+def _save_clients_to_storage():
+    tmp_table_name = '{}.temp'.format(CLIENTS_TABLE)
+    with open(tmp_table_name, mode='w') as f:
+        writer = csv.DictWriter(f, fieldnames=CLIENTS_SCHEMA)
+        writer.writerows(clients)
+        os.remove(CLIENTS_TABLE)
+        os.rename(tmp_table_name, CLIENTS_TABLE)
 
 
 def print_welcome():
@@ -84,8 +92,8 @@ def _get_client_field(field_name, new=''):
 
 
 def run():
+    _initialize_clients_from_storage()
     print_welcome()
-    print(clients)
     command = input()
     command = command.upper()
     if command == 'C':
@@ -96,7 +104,6 @@ def run():
             'position': _get_client_field('position')
         }
         create_client(client)
-        list_clients()
     elif command == 'L':
         list_clients()
     elif command == 'U':
@@ -107,11 +114,9 @@ def run():
         else:
             print(f'The client: {client_name} is not in our client\'s list')
 
-        list_clients()
     elif command == 'D':
         client_name = _get_client_field('name')
         delete_client(client_name)
-        list_clients()
     elif command == 'S':
         client_name = _get_client_field('name')
         found = search_name(client_name)
@@ -119,9 +124,10 @@ def run():
             print(f'The client is in the client\'s list')
         else:
             print(f'The client: {client_name} is not in our client\'s list')
-        list_clients()
     else:
         print('The command is incorrect')
+
+    _save_clients_to_storage()
 
 
 if __name__ == '__main__':
